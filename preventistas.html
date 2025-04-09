@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for ('static', filename='styles.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Registro preventistas</title>
+
+    <style>
+        h1 {
+            text-align: center;
+            color: #000000;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        /* Estilo de las etiquetas */
+        label {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+            
+        }
+
+        /* Estilo de los campos de entrada */
+        input {
+            color: rgb(0, 0, 0);
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #b0b0b0;
+        }
+
+        /* Estilo de los botones */
+        button {
+            
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 10px;
+        }
+        /* Centra todo el contenido */
+        .contenedor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+            
+        }
+         /* Estilo para el mensaje de éxito */
+         #mensaje-exito {
+            display: none;
+            background-color: #60e712;
+            color: white;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+        body {
+            background-image: url('/static/abarrotes.png'); /* URL de una imagen que esta en la carpeta static */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Hace que la imagen se mantenga fija */
+        }
+
+        script{
+            text-align: center;
+        }
+        
+    </style>
+</head>
+
+
+<body>
+    <div class="contenedor">
+        <h1>Provedores</h1>
+
+        <form id="myForm" action="/add_preventistas" method="POST">
+            <div class="mb-3">
+                <label for="preve" class="form-label">Nombre del Preventista</label>
+                <input type="text" class="form-control" id="preve" name="preve" value="" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="total_pago" class="form-label">Total que se Pago</label>
+                <input type="number" class="form-control" id="total_pago" name="total_pago" value="" required>
+                <div id="error-total" style="color: red;"></div> <!-- Contenedor de error para "total_pago" -->
+            </div>
+
+            <div class="mb-3">
+                <label for="fecha_entrada" class="form-label">Fecha de Entrada</label>
+                <input type="text" class="form-control" id="fecha_entrada" name="fecha_entrada" value="" required>
+                <div id="error-fecha" style="color: red;"></div> <!-- Contenedor de error para "fecha_entrada" -->
+            </div>
+
+            <button type="submit" class="btn" style="background-color: #60e712; color: black;">Agregar</button>
+            <button type="button" onclick="window.location.href='{{ url_for('home1') }}'" style="background-color: #f65e5e; color: black;">Regresar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            let isValid = true; // Bandera para comprobar si todo es válido
+    
+            // Limpiar los mensajes de error previos
+            document.getElementById('error-total').textContent = '';
+            document.getElementById('error-fecha').textContent = '';
+
+
+            // Validación del campo total de pago (número positivo)
+            const totalPagoInput = document.getElementById('total_pago');
+            if (!totalPagoInput.validity.valid || totalPagoInput.value < 0) {
+                isValid = false;  // Marcar como no válido
+                if (totalPagoInput.validity.valueMissing) {
+                    document.getElementById('error-total').textContent = 'Este campo es obligatorio.';
+                } else if (totalPagoInput.value < 0) {
+                    document.getElementById('error-total').textContent = 'El total debe ser un número positivo.';
+                }
+            }
+
+            // Validación de la fecha de entrada (formato "D de mes")
+            const fechaEntradaInput = document.getElementById('fecha_entrada');
+            const fechaPattern = /^(0?[1-9]|[12][0-9]|3[01]) de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)$/;
+            if (!fechaPattern.test(fechaEntradaInput.value)) {
+                isValid = false;
+                document.getElementById('error-fecha').textContent = 'Por favor, ingresa la fecha en el formato "Dia de mes" (ej. 4 de marzo).';
+            } else if (fechaEntradaInput.validity.valueMissing) {
+                isValid = false;
+                document.getElementById('error-fecha').textContent = 'Este campo es obligatorio.';
+            }
+
+            // Si alguna validación falla, evitar el envío del formulario
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+    </script>
+</body>
+</html>

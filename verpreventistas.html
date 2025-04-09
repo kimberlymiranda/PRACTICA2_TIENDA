@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lista de preventistas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5P/NlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <style>
+        h1{
+            height: 100%;
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+        }
+        table {
+            width: 100%; /* Asegura que la tabla ocupe todo el ancho disponible */
+            border-collapse: collapse; /* Elimina los espacios entre las celdas */
+        }
+        th, td {
+            border: 1px solid #dddddd9a; /* Línea gris clara alrededor de las celdas */
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #20aaeb; /* Fondo gris claro para los encabezados */
+            font-weight: bold; /* Negrita para los encabezados */
+        }
+        tr:hover {
+            background-color: #94f3ee; /* Cambiar el fondo de la fila al pasar el mouse */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1>Lista de Preventistas</h1>
+                
+                <!-- Verifica si hay datos de preventistas -->
+                {% if preve %}
+                    <!-- Tabla de preventistas -->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Total Pago</th>
+                                <th>Fecha Entrada</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for preventista in preve %}
+                            <tr>
+                                <td>{{ preventista[0] }}</td> <!-- ID -->
+                                <td>{{ preventista[1] }}</td> <!-- Nombre -->
+                                <td>{{ preventista[2] }}</td> <!-- Total Pago -->
+                                <td>{{ preventista[3] }}</td> <!-- Fecha Entrada -->
+                                <td>
+                                    <!-- Botón para eliminar (si es necesario) -->
+                                    <form action="/delete_preventistas/{{ preventista[0] }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <button onclick="window.location.href='{{ url_for('home1') }}'" style="background-color: #f65e5e; color: black;">Regresar</button>
+                    </table>
+                {% else %}
+                    <p>No hay preventistas para mostrar.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cargando Bootstrap JS para interactividad -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
